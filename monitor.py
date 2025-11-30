@@ -5,8 +5,8 @@ from email.mime.text import MIMEText
 from datetime import datetime
 
 # --- SUAS CONFIGURAÇÕES AQUI ---
-VALOR_ALVO_BRL = 25000.00  # <--- COLOCA AQUI O VALOR DO ETH PARA VENDER (EM REAIS)
-EMAIL_DESTINO = "seu_email_aqui@gmail.com" # <--- QUEM VAI RECEBER O AVISO
+VALOR_ALVO_BRL = 2000.00  # <--- COLOCA AQUI O VALOR DO ETH PARA VENDER (EM REAIS)
+EMAIL_DESTINO = "marcioramos1983@gmail.com" # <--- QUEM VAI RECEBER O AVISO
 # -------------------------------
 
 def verificar_preco():
