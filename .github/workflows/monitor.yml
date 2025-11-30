@@ -1,0 +1,29 @@
+name: Monitor Diário ETH
+
+on:
+  schedule:
+    - cron: '0 16 * * *' # 16h UTC = 13h Brasil
+  workflow_dispatch:
+
+jobs:
+  check-price:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v3
+
+      - name: Instalar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Instalar Requests
+        run: pip install requests
+
+      - name: Rodar Script
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          EMAIL_DEST: ${{ secrets.EMAIL_DEST }}
+          TARGET_PRICE: ${{ secrets.TARGET_PRICE }}
+        run: python monitor.py
