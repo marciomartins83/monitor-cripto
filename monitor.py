@@ -24,7 +24,7 @@ def verificar_preco():
         # Lógica: Manda e-mail SEMPRE, mas muda o assunto e o texto
         if preco_atual >= VALOR_ALVO_BRL:
             # CENÁRIO DE VENDA (Meta atingida)
-            assunto = f"🚀 VENDA AGORA! ETH bateu R$ {preco_atual:.2f}"
+            assunto = f"🚀 NEGOCIE AGORA! ETH bateu R$ {preco_atual:.2f}"
             mensagem_extra = "O Ethereum atingiu sua meta! Corre pra negociar e realizar o lucro."
             enviar_email(preco_atual, assunto, mensagem_extra)
         else:
