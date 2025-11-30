@@ -33,7 +33,7 @@ def verificar_preco():
             falta = VALOR_ALVO_BRL - preco_atual
             porcentagem = (falta / preco_atual) * 100
             
-            assunto = f"📊 Relatório Diário: ETH a R$ {preco_atual:.2f}"
+            assunto = f"📊 NÂO ALCANÇADO! ETH a R$ {preco_atual:.2f}"
             mensagem_extra = f"Ainda não atingiu o alvo. Faltam R$ {falta:.2f} (+{porcentagem:.1f}%) para a meta. Segue o jogo."
             enviar_email(preco_atual, assunto, mensagem_extra)
             
