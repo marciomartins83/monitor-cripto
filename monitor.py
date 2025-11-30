@@ -5,7 +5,7 @@ from email.mime.text import MIMEText
 from datetime import datetime
 
 # --- SUAS CONFIGURAÇÕES AQUI ---
-VALOR_ALVO_BRL = 2000.00  # <--- COLOCA AQUI O VALOR DO ETH PARA VENDER (EM REAIS)
+VALOR_ALVO_BRL = 21787.00  # <--- COLOCA AQUI O VALOR DO ETH PARA VENDER (EM REAIS)
 EMAIL_DESTINO = "marcioramos1983@gmail.com" # <--- QUEM VAI RECEBER O AVISO
 # -------------------------------
 
@@ -39,7 +39,7 @@ def enviar_email(preco_atual):
         print("ERRO: Credenciais de e-mail não configuradas nas Secrets!")
         return
 
-    assunto = f"🚀 VENDA AGORA! ETH bateu R$ {preco_atual:.2f}"
+    assunto = f"🚀 Movimente AGORA! ETH bateu R$ {preco_atual:.2f}"
     corpo = f"""
     Fala Marcio!
     
