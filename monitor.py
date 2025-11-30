@@ -4,13 +4,13 @@ import requests
 from email.mime.text import MIMEText
 from datetime import datetime
 
-# --- SUAS CONFIGURAÇÕES AQUI ---
-VALOR_ALVO_BRL = 21787.00  # <--- COLOCA AQUI O VALOR DO ETH PARA VENDER (EM REAIS)
-EMAIL_DESTINO = "marcioramos1983@gmail.com" # <--- QUEM VAI RECEBER O AVISO
-# -------------------------------
+# --- SUAS CONFIGURAÇÕES ---
+VALOR_ALVO_BRL = 21787.00  # Meta de venda (Topo recente + 5%)
+EMAIL_DESTINO = "marcioramos1983@gmail.com" # Seu e-mail
+# --------------------------
 
 def verificar_preco():
-    # API da CoinGecko (Gratuita e sem chave)
+    # API da CoinGecko
     url = "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=brl"
     
     try:
@@ -21,49 +21,60 @@ def verificar_preco():
         hora_agora = datetime.now().strftime("%d/%m/%Y %H:%M")
         print(f"[{hora_agora}] ETH Atual: R$ {preco_atual:.2f} | Alvo: R$ {VALOR_ALVO_BRL:.2f}")
 
-        # Lógica: Se o preço atual for MAIOR ou IGUAL ao alvo, dispara o email
+        # Lógica: Manda e-mail SEMPRE, mas muda o assunto e o texto
         if preco_atual >= VALOR_ALVO_BRL:
-            enviar_email(preco_atual)
+            # CENÁRIO DE VENDA (Meta atingida)
+            assunto = f"🚀 VENDA AGORA! ETH bateu R$ {preco_atual:.2f}"
+            mensagem_extra = "O Ethereum atingiu sua meta! Corre pra negociar e realizar o lucro."
+            enviar_email(preco_atual, assunto, mensagem_extra)
         else:
-            print("Ainda não atingiu o alvo. Segue o jogo.")
+            # CENÁRIO DE HOLD (Ainda não chegou)
+            # Calcula quanto falta em porcentagem
+            falta = VALOR_ALVO_BRL - preco_atual
+            porcentagem = (falta / preco_atual) * 100
+            
+            assunto = f"📊 Relatório Diário: ETH a R$ {preco_atual:.2f}"
+            mensagem_extra = f"Ainda não atingiu o alvo. Faltam R$ {falta:.2f} (+{porcentagem:.1f}%) para a meta. Segue o jogo."
+            enviar_email(preco_atual, assunto, mensagem_extra)
             
     except Exception as e:
         print(f"Erro ao buscar preço: {e}")
 
-def enviar_email(preco_atual):
-    # Pega as credenciais das Secrets do GitHub (Segurança)
+def enviar_email(preco_atual, assunto_email, mensagem_corpo):
+    # Pega as credenciais das Secrets do GitHub
     email_remetente = os.environ.get('EMAIL_USER')
-    senha_app = os.environ.get('EMAIL_PASS') # Senha de App do Google
+    senha_app = os.environ.get('EMAIL_PASS')
 
     if not email_remetente or not senha_app:
         print("ERRO: Credenciais de e-mail não configuradas nas Secrets!")
         return
 
-    assunto = f"🚀 Movimente AGORA! ETH bateu R$ {preco_atual:.2f}"
     corpo = f"""
     Fala Marcio!
     
-    O Ethereum atingiu o preço que você queria.
+    Resumo diário do seu monitoramento:
     
-    Meta: R$ {VALOR_ALVO_BRL:.2f}
-    Atual: R$ {preco_atual:.2f}
+    -----------------------------------
+    🎯 Meta de Venda: R$ {VALOR_ALVO_BRL:.2f}
+    💎 Preço Atual:   R$ {preco_atual:.2f}
+    -----------------------------------
     
-    Corre pra vender!
+    Mensagem do Robozão:
+    {mensagem_corpo}
     """
     
     msg = MIMEText(corpo)
-    msg['Subject'] = assunto
+    msg['Subject'] = assunto_email
     msg['From'] = email_remetente
     msg['To'] = EMAIL_DESTINO
 
     try:
-        # Configuração para Gmail
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
         server.login(email_remetente, senha_app)
         server.send_message(msg)
         server.quit()
-        print(">> E-mail de alerta enviado com sucesso!")
+        print(f">> E-mail enviado: {assunto_email}")
     except Exception as e:
         print(f"Erro ao enviar e-mail: {e}")
 
